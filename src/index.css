@@ -1,0 +1,834 @@
+@import 'tailwindcss';
+
+/* ──────────────────────────────────────────────────────────────────
+   CODEX OFICIAL · Design tokens
+   Inspirado em códigos legais brasileiros, dossiês de imprensa
+   oficial e tipografia editorial. Pergaminho × tinta × selo.
+   ────────────────────────────────────────────────────────────────── */
+@theme {
+  --font-display:
+    'Fraunces', 'Iowan Old Style', 'Charter', ui-serif, Georgia, serif;
+  --font-sans:
+    'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:
+    'JetBrains Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+
+  /* Papel & tinta */
+  --color-paper: #f4ecda;
+  --color-paper-soft: #ede3cd;
+  --color-paper-deep: #e3d8be;
+  --color-paper-edge: #d3c4a3;
+
+  --color-ink: #1d1612;
+  --color-ink-soft: #4a3f33;
+  --color-ink-faint: #8a7d6f;
+  --color-ink-ghost: #b9ad97;
+
+  /* Selo & latão */
+  --color-seal: #7a1f1c;
+  --color-seal-deep: #581513;
+  --color-seal-soft: #c79b94;
+  --color-seal-wash: rgba(122, 31, 28, 0.08);
+  --color-brass: #a47148;
+  --color-brass-soft: #d6b482;
+
+  /* Estados sóbrios */
+  --color-moss: #4f5e3f;
+  --color-moss-soft: #b6c2a3;
+  --color-rust: #a64f1f;
+
+  /* Regras & bordas */
+  --color-rule: #2a1f17;
+  --color-rule-soft: rgba(42, 31, 23, 0.18);
+  --color-rule-faint: rgba(42, 31, 23, 0.08);
+
+  /* Sombras editoriais (papel sobre papel) */
+  --shadow-leaf:
+    0 1px 0 rgba(42, 31, 23, 0.06),
+    0 1px 2px rgba(42, 31, 23, 0.05),
+    0 18px 32px -16px rgba(42, 31, 23, 0.18),
+    0 32px 64px -24px rgba(42, 31, 23, 0.18);
+  --shadow-stamp:
+    0 0 0 1px rgba(122, 31, 28, 0.12),
+    0 12px 32px -12px rgba(42, 31, 23, 0.35);
+
+  /* Movimento */
+  --ease-ink: cubic-bezier(0.6, 0.04, 0.32, 1);
+  --animate-paper-rise: paper-rise 0.7s var(--ease-ink) both;
+  --animate-ink-sweep: ink-sweep 0.45s var(--ease-ink) both;
+}
+
+@keyframes paper-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ink-sweep {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes seal-press {
+  0% {
+    transform: scale(0.7) rotate(-8deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05) rotate(-3deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1) rotate(-2deg);
+    opacity: 1;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Base — papel, tinta, tipografia
+   ────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'ss01', 'cv11', 'liga', 'calt';
+  }
+
+  html,
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv11', 'liga', 'calt', 'tnum' 0;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(
+        ellipse at 50% -10%,
+        rgba(122, 31, 28, 0.05),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 100% 100%,
+        rgba(164, 113, 72, 0.08),
+        transparent 50%
+      ),
+      linear-gradient(180deg, var(--color-paper) 0%, var(--color-paper-soft) 100%);
+    background-attachment: fixed;
+  }
+
+  /* Grão sutil — nudge sem ser barulhento */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.45;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.32 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Marcas de registro nos cantos — vinheta de impressão */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background:
+      linear-gradient(90deg, var(--color-paper-edge), transparent 6%, transparent 94%, var(--color-paper-edge)),
+      linear-gradient(180deg, var(--color-paper-edge), transparent 4%, transparent 96%, var(--color-paper-edge));
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-feature-settings: 'ss01', 'liga', 'calt';
+  }
+
+  ::selection {
+    background: var(--color-seal);
+    color: var(--color-paper);
+  }
+
+  /* Foco global: hairline em tinta */
+  :focus-visible {
+    outline: 1.5px solid var(--color-seal);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Componentes Codex
+   ────────────────────────────────────────────────────────────────── */
+@layer components {
+  /* Folha de papel principal — efeito letterpress sobre pergaminho */
+  .codex-leaf {
+    position: relative;
+    background-color: var(--color-paper);
+    background-image:
+      linear-gradient(
+        180deg,
+        var(--color-paper) 0%,
+        color-mix(in oklab, var(--color-paper) 92%, var(--color-paper-soft)) 100%
+      );
+    box-shadow: var(--shadow-leaf);
+    border-top: 1px solid color-mix(in oklab, var(--color-paper-edge) 40%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-paper-edge) 60%, transparent);
+  }
+
+  .codex-leaf::before,
+  .codex-leaf::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-rule-soft) 20%,
+      var(--color-rule-soft) 80%,
+      transparent
+    );
+  }
+  .codex-leaf::before { top: 0; }
+  .codex-leaf::after { bottom: 0; }
+
+  /* Cabeçalho do dossiê — tipografia editorial */
+  .codex-masthead {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .codex-masthead__rule {
+    flex: 1;
+    height: 1px;
+    background: var(--color-rule-soft);
+  }
+  .codex-masthead__mark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-seal);
+    letter-spacing: 0;
+  }
+
+  /* Numeração de seção em marginália */
+  .codex-section-number {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-seal);
+  }
+
+  /* Título de seção — Fraunces alta contraste */
+  .codex-section-title {
+    font-family: var(--font-display);
+    font-weight: 360;
+    font-size: clamp(1.875rem, 1.4rem + 1.6vw, 2.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-variation-settings: 'opsz' 96, 'SOFT' 30;
+  }
+  .codex-section-title em {
+    font-style: italic;
+    font-weight: 320;
+    color: var(--color-seal);
+    font-variation-settings: 'opsz' 144, 'SOFT' 60;
+  }
+
+  /* Subtítulo / lede */
+  .codex-lede {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+    font-variation-settings: 'opsz' 24, 'SOFT' 80;
+    max-width: 56ch;
+  }
+
+  /* Marginália — orientações em itálico, pequena */
+  .codex-orientation {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-ink-faint);
+    font-variation-settings: 'opsz' 14, 'SOFT' 100;
+    padding-left: 0.875rem;
+    border-left: 1px solid var(--color-brass-soft);
+  }
+
+  /* Rótulo de campo — pequeno, em alta caixa, espaçado */
+  .codex-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .codex-label__num {
+    color: var(--color-seal);
+    font-weight: 500;
+  }
+
+  /* Input com regra inferior — sem caixa */
+  .codex-input,
+  .codex-textarea,
+  .codex-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--color-rule-soft);
+    border-radius: 0;
+    padding: 0.625rem 0.25rem 0.5rem;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    transition: border-color 0.2s var(--ease-ink), background 0.2s;
+  }
+  .codex-input::placeholder,
+  .codex-textarea::placeholder {
+    color: var(--color-ink-ghost);
+    font-style: italic;
+    font-family: var(--font-display);
+    font-weight: 300;
+  }
+  .codex-input:hover,
+  .codex-textarea:hover,
+  .codex-select:hover {
+    border-bottom-color: var(--color-ink-faint);
+  }
+
+  /* Estado focado — regra ganha tinta de selo + sweep */
+  .codex-field {
+    position: relative;
+  }
+  .codex-field::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1.5px;
+    background: var(--color-seal);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s var(--ease-ink);
+    pointer-events: none;
+  }
+  .codex-field:focus-within::after {
+    transform: scaleX(1);
+  }
+  .codex-field:focus-within .codex-input,
+  .codex-field:focus-within .codex-textarea,
+  .codex-field:focus-within .codex-select {
+    outline: none;
+    border-bottom-color: transparent;
+  }
+
+  /* Select — caret customizada em selo */
+  .codex-select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M3 5l4 4 4-4' fill='none' stroke='%237a1f1c' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.25rem center;
+    background-size: 14px 14px;
+    padding-right: 1.75rem;
+    cursor: pointer;
+  }
+  .codex-select:invalid {
+    color: var(--color-ink-ghost);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* Textarea — sempre rolável, papel reglado opcional */
+  .codex-textarea {
+    min-height: 5rem;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  /* Botões */
+  .codex-button {
+    --bg: var(--color-ink);
+    --fg: var(--color-paper);
+    --bd: var(--color-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 1.125rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg);
+    background: var(--bg);
+    border: 1px solid var(--bd);
+    border-radius: 0;
+    cursor: pointer;
+    transition:
+      transform 0.15s var(--ease-ink),
+      background 0.2s var(--ease-ink),
+      color 0.2s var(--ease-ink),
+      box-shadow 0.2s var(--ease-ink);
+    box-shadow:
+      0 0 0 1px var(--color-paper),
+      0 0 0 2px var(--bd),
+      0 6px 18px -10px rgba(42, 31, 23, 0.4);
+  }
+  .codex-button:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px var(--color-paper),
+      0 0 0 2px var(--bd),
+      0 10px 24px -10px rgba(42, 31, 23, 0.55);
+  }
+  .codex-button:active {
+    transform: translateY(0);
+  }
+  .codex-button--ghost {
+    --bg: transparent;
+    --fg: var(--color-ink);
+    --bd: var(--color-ink);
+    box-shadow: none;
+  }
+  .codex-button--ghost:hover {
+    --bg: var(--color-ink);
+    --fg: var(--color-paper);
+    box-shadow: 0 6px 18px -10px rgba(42, 31, 23, 0.4);
+  }
+  .codex-button--seal {
+    --bg: var(--color-seal);
+    --fg: var(--color-paper);
+    --bd: var(--color-seal);
+  }
+  .codex-button--seal:hover {
+    --bg: var(--color-seal-deep);
+  }
+  .codex-button--danger {
+    --bg: transparent;
+    --fg: var(--color-seal);
+    --bd: var(--color-seal-soft);
+    box-shadow: none;
+  }
+  .codex-button--danger:hover {
+    --bg: var(--color-seal);
+    --fg: var(--color-paper);
+    --bd: var(--color-seal);
+  }
+
+  /* Chip / tag de status */
+  .codex-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-seal);
+    background: var(--color-seal-wash);
+    border: 1px solid color-mix(in oklab, var(--color-seal) 30%, transparent);
+  }
+
+  /* Regra ornamental com fleurão central */
+  .codex-rule {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-brass);
+  }
+  .codex-rule::before,
+  .codex-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-rule-soft) 30%,
+      var(--color-rule-soft) 70%,
+      transparent
+    );
+  }
+  .codex-rule__mark {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.875rem;
+    color: var(--color-brass);
+    letter-spacing: 0.4em;
+  }
+
+  /* Rodapé colofon */
+  .codex-colophon {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  /* Selo decorativo */
+  .codex-seal {
+    display: inline-grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    border: 1px double var(--color-seal);
+    color: var(--color-seal);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    line-height: 1.1;
+    text-transform: uppercase;
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(122, 31, 28, 0.06),
+      transparent 65%
+    );
+    transform: rotate(-2deg);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Split layout: editor à esquerda, documento à direita
+   ────────────────────────────────────────────────────────────────── */
+@layer components {
+  .codex-split {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100dvh;
+  }
+
+  @media (min-width: 1024px) {
+    .codex-split {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+    }
+  }
+
+  .codex-split__editor {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-paper) 75%, var(--color-ink) 4%),
+        color-mix(in oklab, var(--color-paper) 65%, var(--color-ink) 8%)
+      );
+    border-bottom: 1px solid var(--color-rule-soft);
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  @media (min-width: 1024px) {
+    .codex-split__editor {
+      border-right: 1px solid var(--color-rule-soft);
+      border-bottom: 0;
+      padding: 3rem 2.5rem 5rem;
+      max-height: 100dvh;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  .codex-split__preview {
+    background:
+      linear-gradient(
+        180deg,
+        var(--color-paper) 0%,
+        var(--color-paper-soft) 100%
+      );
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .codex-split__preview {
+      padding: 3rem 2.5rem 6rem;
+      max-height: 100dvh;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+  }
+
+  /* Cabeçalho do editor */
+  .codex-editor-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-rule-soft);
+  }
+
+  /* Scrollbar enxuta — combina com o papel */
+  .codex-split__editor::-webkit-scrollbar,
+  .codex-split__preview::-webkit-scrollbar {
+    width: 8px;
+  }
+  .codex-split__editor::-webkit-scrollbar-track,
+  .codex-split__preview::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .codex-split__editor::-webkit-scrollbar-thumb,
+  .codex-split__preview::-webkit-scrollbar-thumb {
+    background: var(--color-rule-soft);
+    border-radius: 999px;
+  }
+  .codex-split__editor::-webkit-scrollbar-thumb:hover,
+  .codex-split__preview::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-faint);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Document preview — composição editorial à direita
+   ────────────────────────────────────────────────────────────────── */
+@layer components {
+  .doc-shell {
+    position: relative;
+    max-width: 38rem;
+    margin: 0 auto;
+    background: var(--color-paper);
+    box-shadow: var(--shadow-leaf);
+    padding: 3rem 2.5rem 4rem;
+    border-top: 1px solid color-mix(in oklab, var(--color-paper-edge) 40%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-paper-edge) 60%, transparent);
+  }
+
+  @media (min-width: 1024px) {
+    .doc-shell {
+      padding: 4rem 3.5rem 5rem;
+    }
+  }
+
+  .doc-shell::before,
+  .doc-shell::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-rule-soft) 20%,
+      var(--color-rule-soft) 80%,
+      transparent
+    );
+  }
+  .doc-shell::before { top: 0; }
+  .doc-shell::after { bottom: 0; }
+
+  /* Capa */
+  .doc-cover {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-rule-soft);
+    text-align: center;
+  }
+  .doc-cover__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-bottom: 1.75rem;
+  }
+  .doc-cover__title {
+    font-family: var(--font-display);
+    font-weight: 320;
+    font-size: clamp(2.25rem, 1.6rem + 2vw, 3.25rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  }
+  .doc-cover__title em {
+    font-style: italic;
+    font-weight: 280;
+    color: var(--color-seal);
+    font-variation-settings: 'opsz' 144, 'SOFT' 80;
+  }
+  .doc-cover__subtitle {
+    margin-top: 0.875rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 0.9375rem;
+    color: var(--color-ink-soft);
+    font-variation-settings: 'opsz' 18, 'SOFT' 80;
+  }
+  .doc-cover__rule {
+    margin-top: 1.5rem;
+    font-family: var(--font-display);
+    color: var(--color-brass);
+    letter-spacing: 0.5em;
+    font-style: italic;
+  }
+
+  /* Corpo */
+  .doc-body {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink);
+    font-variation-settings: 'opsz' 14, 'SOFT' 30;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .doc-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .doc-chapter {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-seal);
+    margin-bottom: 0.5rem;
+    text-align: left;
+  }
+
+  .doc-title {
+    font-family: var(--font-display);
+    font-weight: 360;
+    font-size: 1.625rem;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin-bottom: 1.75rem;
+    font-variation-settings: 'opsz' 48, 'SOFT' 30;
+    text-align: left;
+  }
+  .doc-title::first-letter {
+    color: var(--color-seal);
+  }
+
+  .doc-clause {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 0.5rem;
+    margin: 0 0 0.875rem;
+  }
+
+  .doc-clause__num {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-seal);
+    line-height: 1.7;
+    padding-top: 0.125rem;
+    letter-spacing: 0.04em;
+  }
+
+  .doc-clause__body {
+    text-align: justify;
+  }
+
+  .doc-footnote {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-rule-faint);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    text-align: center;
+  }
+
+  /* Cabeçalho fixo do preview com toggle */
+  .codex-preview-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-rule-soft);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   Utilitários auxiliares
+   ────────────────────────────────────────────────────────────────── */
+@utility hairline-x {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-rule-soft) 15%,
+    var(--color-rule-soft) 85%,
+    transparent
+  );
+  height: 1px;
+}
+
+@utility hairline-y {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--color-rule-soft) 15%,
+    var(--color-rule-soft) 85%,
+    transparent
+  );
+  width: 1px;
+}
+
+@utility tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

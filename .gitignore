@@ -1,0 +1,33 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# Cache do Vite
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local / OS
+.DS_Store
+*.local
+*.swp
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code (local)
+.claude/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
